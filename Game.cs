@@ -30,17 +30,17 @@ namespace DZ1
             _objs = new BaseObject[30];// 30 объектов
             for (int i = 0; i < _objs.Length; i++)
             {
-                int _x = Random.Next(0,Width);
+                int _x = Random.Next(0,Width); // случайное место
                 int _y = i * 20;
-                int _layer = Random.Next(0, 5);
-                int _type = Random.Next(0, 2);
+                int _layer = Random.Next(0, 5); //сдучайный слой
+                int _type = Random.Next(0, 2);// крестик или окружность
                 if (_type == 0)
                 
                     _objs[i] = new Star(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer);
                 
                 else
                     _objs[i] = new BaseObject(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer);
-                //отнриесовка
+                //отрисовка
             }
 
         }
