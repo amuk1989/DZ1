@@ -10,7 +10,7 @@ namespace DZ1
     class Star: BaseObject
     {
        
-        public Star(Point pos, Point dir, Size size, int Layer) : base(pos, dir, size, Layer)
+        public Star(Point pos, Point dir, Size size, int Layer, int color) : base(pos, dir, size, Layer, color)
         {
             //Dir.X = (Layer+1) * 10;
             //Size.Width = Size.Width * (Layer + 1)*3;
@@ -21,6 +21,7 @@ namespace DZ1
         {
             Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);
             Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width, Pos.Y, Pos.X, Pos.Y + Size.Height);
+            
         }
 
        

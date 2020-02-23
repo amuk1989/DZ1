@@ -33,13 +33,16 @@ namespace DZ1
                 int _x = Random.Next(0,Width); // случайное место
                 int _y = i * 20;
                 int _layer = Random.Next(0, 5); //сдучайный слой
-                int _type = Random.Next(0, 2);// крестик или окружность
+                int _type = Random.Next(0, 3);// крестик или окружность
+                int _color = Random.Next(0, 3);
                 if (_type == 0)
                 
-                    _objs[i] = new Star(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer);
+                    _objs[i] = new Star(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer, _color);
                 
-                else
-                    _objs[i] = new BaseObject(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer);
+                else if (_type == 1)
+                    _objs[i] = new BaseObject(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer, _color);
+                if (_type == 2)
+                    _objs[i] = new Planet(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer, _color);
                 //отрисовка
             }
 
