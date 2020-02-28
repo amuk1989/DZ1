@@ -9,22 +9,30 @@ namespace DZ1
 {
     class Star: BaseObject
     {
-       
-        public Star(Point pos, Point dir, Size size, int Layer, int color) : base(pos, dir, size, Layer, color)
+        Image fileOfStar = Image.FromFile("star1.png");
+        Random Random = new Random();
+        string RandomColorStar(int color)
         {
-            //Dir.X = (Layer+1) * 10;
-            //Size.Width = Size.Width * (Layer + 1)*3;
-            //Size.Height = Size.Height * (Layer + 1)*3;
+            if (color == 0) return "star1.png";
+            else if (color == 1) return "star2.png";
+            else return "star3.png";
+
+        }
+
+        public Star(Point pos, Point dir, Size size, int Layer) : base(pos, dir, size, Layer)
+        {
+            int _color = Random.Next(0, 3);
+            fileOfStar = Image.FromFile(RandomColorStar(_color));// инициализация картинки
         }
 
         public override void Draw()
         {
-            Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X, Pos.Y, Pos.X + Size.Width, Pos.Y + Size.Height);
-            Game.Buffer.Graphics.DrawLine(Pens.White, Pos.X + Size.Width, Pos.Y, Pos.X, Pos.Y + Size.Height);
             
+            Game.Buffer.Graphics.DrawImage(fileOfStar, Pos.X, Pos.Y, Size.Width, Size.Height);// объект картинка
+
         }
 
-       
+        
 
     }
 }

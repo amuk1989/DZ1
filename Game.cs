@@ -18,7 +18,9 @@ namespace DZ1
         public static int Width { get; set; }
         public static int Height { get; set; }
 
-        public static BaseObject[] _objs;//Массив фоновых объектов
+        public static BaseObject[] _stars;//Массив фоновых объектов
+        public static BaseObject[] _asteroids;//Массив фоновых объектов
+        public static Ship _ship;//Массив фоновых объектов
         static Game()
         {
         }
@@ -27,30 +29,46 @@ namespace DZ1
         public static void Load()
         {
             Random Random = new Random();
-            _objs = new BaseObject[30];// 30 объектов
-            for (int i = 0; i < _objs.Length; i++)
+            int starsCount = 50;
+            _stars = new Star[starsCount];// 50 объектов
+            for (int i = 0; i < _stars.Length; i++)
             {
                 int _x = Random.Next(0,Width); // случайное место
-                int _y = i * 20;
+                int _y = i * Height/starsCount;
                 int _layer = Random.Next(0, 5); //сдучайный слой
-                int _type = Random.Next(0, 3);// крестик или окружность
-                int _color = Random.Next(0, 3);
-                if (_type == 0)
-                
-                    _objs[i] = new Star(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer, _color);
-                
-                else if (_type == 1)
-                    _objs[i] = new BaseObject(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer, _color);
-                if (_type == 2)
-                    _objs[i] = new Planet(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer, _color);
+                                
+                _stars[i] = new Star(new Point(_x, _y), new Point(10, 0), new Size(1, 1), _layer);
+              
                 //отрисовка
+            }
+
+            int asteroidCount = 10;
+            _asteroids = new Asteroid[asteroidCount];
+
+            for (int i = 0; i < _asteroids.Length; i++)
+            {
+                int _x = Random.Next(0, Width); // случайное место
+                int _y = Random.Next(0, Height);
+                int _layer = 3; 
+
+                _asteroids[i] = new Asteroid(new Point(_x, _y), new Point(1, 0), new Size(2, 2), _layer);
+
+                //отрисовка
+            }
+
+            {
+                int _x = 10; 
+                int _y = Height / 2;
+                int _layer = 0;
+
+                _ship = new Ship(new Point(_x, _y), new Point(10, 10), new Size(20, 20), _layer); 
             }
 
         }
 
         public static void Init(Form form)
         {
-            Timer timer = new Timer { Interval = 100 };
+            Timer timer = new Timer { Interval = 70 };
             // Графическое устройство для вывода графики            
             Graphics g;
             // Предоставляет доступ к главному буферу графического контекста для текущего приложения
@@ -64,6 +82,7 @@ namespace DZ1
             Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
 
             Load();
+            form.KeyDown += OnFormKeyDown;
             timer.Start();
             timer.Tick += Timer_Tick;
         }
@@ -71,15 +90,21 @@ namespace DZ1
         {
             // Проверяем вывод графики
             Buffer.Graphics.Clear(Color.Black);
-            foreach (BaseObject obj in _objs)
+            foreach (BaseObject obj in _stars)
                 obj.Draw();
+            foreach (BaseObject obj in _asteroids)
+                obj.Draw();
+            _ship.Draw();
             Buffer.Render();
         }
 
         public static void Update()
         {
-            foreach (BaseObject obj in _objs)
+            foreach (BaseObject obj in _stars)
                 obj.Update();
+            foreach (BaseObject obj in _asteroids)
+                obj.Update();
+            _ship.Update();
         }
 
 
@@ -87,6 +112,24 @@ namespace DZ1
         {
             Draw();
             Update();
+        }
+
+        private static void OnFormKeyDown(object Sender, KeyEventArgs E)
+        {
+            switch (E.KeyCode)
+            {
+                /*case Keys.ControlKey:
+                    __Bullet = new Bullet(__Ship.Position.Y);
+                    break;*/
+
+                case Keys.Up:
+                    _ship.MoveUp();
+                    break;
+
+                case Keys.Down:
+                    _ship.MoveDown();
+                    break;
+            }
         }
 
     }

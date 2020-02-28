@@ -9,7 +9,7 @@ namespace DZ1
 {
     class Planet: BaseObject
     {
-        public Planet(Point pos, Point dir, Size size, int Layer, int color) : base(pos, dir, size, Layer, color)
+        public Planet(Point pos, Point dir, Size size, int Layer) : base(pos, dir, size, Layer)
         {
             
         }
