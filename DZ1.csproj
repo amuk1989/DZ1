@@ -49,7 +49,9 @@
     <Compile Include="BaseObject.cs" />
     <Compile Include="Bulet.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Gamer.cs" />
     <Compile Include="ICollission.cs" />
+    <Compile Include="medecine.cs" />
     <Compile Include="Planet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

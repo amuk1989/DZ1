@@ -18,6 +18,11 @@ namespace DZ1
         {
             _energy -= n;
         }
+        
+        public void EnergyHight(int n)
+        {
+            _energy += n;
+        }
 
         public Ship(Point pos, Point dir, Size size, int Layer) : base(pos, dir, size, Layer)
         {
@@ -53,6 +58,7 @@ namespace DZ1
 
         public void Die()
         {
+            MessageDie?.Invoke();
         }
 
         public static event Message MessageDie;

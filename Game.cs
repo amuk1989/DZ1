@@ -10,6 +10,8 @@ namespace DZ1
 {
     static class Game
     {
+        private static Timer _timer = new Timer() { Interval = 70 };
+
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
 
@@ -20,8 +22,10 @@ namespace DZ1
 
         public static BaseObject[] _stars;//Массив фоновых объектов
         public static BaseObject[] _asteroids;//Массив фоновых объектов
-        public static Ship _ship;//Массив фоновых объектов
-        public static Bulet _bulet;//Массив фоновых объектов
+        public static Ship _ship;//корабль
+        public static Bulet _bulet;//пуля
+        public static Medecine _medecine;//Аптечка
+        public static Gamer gamer;
 
         static Game()
         {
@@ -31,6 +35,11 @@ namespace DZ1
         public static void Load()
         {
             Random Random = new Random();
+
+            gamer = new Gamer();
+            gamer.Name = "Player";
+            gamer.Score = 0;
+
             int starsCount = 50;
             _stars = new Star[starsCount];// 50 объектов
             for (int i = 0; i < _stars.Length; i++)
@@ -62,8 +71,22 @@ namespace DZ1
                 _ship = new Ship(new Point(_x, _y), new Point(10, 10), new Size(20, 20), _layer); 
             }
 
-            
+            _medecine = CreateMedecine();
 
+        }
+
+        static Medecine CreateMedecine()
+        {
+            
+            Random Random = new Random();
+            if (Random.Next(0, 10) > 8)
+            {
+                int _x = Width; // случайное место
+                int _y = Random.Next(0, Height);
+
+                return new Medecine(new Point(_x, _y), new Point(1, 0), new Size(5, 5));
+            }
+            else return null;
         }
 
         static Asteroid OneAsteroid()
@@ -77,14 +100,15 @@ namespace DZ1
 
         public static void Init(Form form)
         {
-            Timer timer = new Timer { Interval = 70 };
+            Ship.MessageDie += Finish;
+                        
             // Графическое устройство для вывода графики            
             Graphics g;
             // Предоставляет доступ к главному буферу графического контекста для текущего приложения
             _context = BufferedGraphicsManager.Current;
             g = form.CreateGraphics();
             // Создаем объект (поверхность рисования) и связываем его с формой
-            // Запоминаем размеры формы
+            // Запоминаем размеры формы 
             Width = form.ClientSize.Width;
             Height = form.ClientSize.Height;
             // Связываем буфер в памяти с графическим объектом, чтобы рисовать в буфере
@@ -92,40 +116,73 @@ namespace DZ1
 
             Load();
             form.KeyDown += OnFormKeyDown;
-            timer.Start();
-            timer.Tick += Timer_Tick;
+            _timer.Start();
+            _timer.Tick += Timer_Tick;
         }
         public static void Draw()
         {
+            Random Random = new Random();
             // Проверяем вывод графики
             Buffer.Graphics.Clear(Color.Black);
             foreach (BaseObject obj in _stars)
                 obj.Draw();
-            foreach (BaseObject obj in _asteroids)
-                obj.Draw();
-            _ship?.Draw();
+
+            foreach (Asteroid a in _asteroids)
+            {
+                a?.Draw();
+            }
+
             _bulet?.Draw();
+            _ship?.Draw();
 
             if (_ship != null)
-                Buffer.Graphics.DrawString("Energy:" + _ship.Energy, SystemFonts.DefaultFont, Brushes.White, 0, 0);
-
+            {
+                Buffer.Graphics.DrawString("Name:" + gamer.Name, SystemFonts.DefaultFont, Brushes.White, 0, 0);
+                Buffer.Graphics.DrawString("Score:" + gamer.Score, SystemFonts.DefaultFont, Brushes.White, 0, 15);
+                Buffer.Graphics.DrawString("Energy:" + _ship.Energy, SystemFonts.DefaultFont, Brushes.White, 0, 30);
+            }
+                
+                        
+            _medecine?.Draw();
+            
             Buffer.Render();
         }
 
         public static void Update()
         {
+            var random = new Random();
+
             foreach (BaseObject obj in _stars)
                 obj.Update();
-            for (int i = 0; i<_asteroids.Length; i++)
+
+            for (var i = 0; i < _asteroids.Length; i++)
             {
+                if (_asteroids[i] == null) continue;
                 _asteroids[i].Update();
-                if (_bulet != null && _asteroids[i].Collision(_bulet)) 
+
+                if (_bulet != null && _bulet.Collision(_asteroids[i]))//попал по астероиду
                 {
-                    _asteroids[i] = OneAsteroid();  
+                    _asteroids[i] = null;
+                    _bulet = null;
+                    gamer.Score = gamer.Score+1;
+                    continue;
                 }
+                if (!_ship.Collision(_asteroids[i])) continue;
+                
+                _ship?.EnergyLow(random.Next(1, 10));
+                if (_ship.Energy <= 0) _ship?.Die();
+
             }
-            _ship.Update();
+
+            if (_medecine != null && _ship.Collision(_medecine))
+            {
+                _ship?.EnergyHight(random.Next(1, 10));
+            }
+
+            _ship?.Update();
             _bulet?.Update();
+            _medecine?.Update();
+            if (_medecine != null && _medecine._Pos.X < 0) _medecine = null;
         }
 
 
@@ -133,6 +190,8 @@ namespace DZ1
         {
             Draw();
             Update();
+            if (_medecine == null) 
+                _medecine = CreateMedecine();
         }
 
         private static void OnFormKeyDown(object Sender, KeyEventArgs E)
@@ -154,6 +213,13 @@ namespace DZ1
                     _ship.MoveDown();
                     break;
             }
+        }
+
+        public static void Finish()
+        {
+            _timer.Stop();
+            Buffer.Graphics.DrawString("The End", new Font(FontFamily.GenericSansSerif, 60, FontStyle.Underline), Brushes.White, 200, 100);
+            Buffer.Render();
         }
 
     }
