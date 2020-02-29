@@ -21,6 +21,8 @@ namespace DZ1
         public static BaseObject[] _stars;//Массив фоновых объектов
         public static BaseObject[] _asteroids;//Массив фоновых объектов
         public static Ship _ship;//Массив фоновых объектов
+        public static Bulet _bulet;//Массив фоновых объектов
+
         static Game()
         {
         }
@@ -47,12 +49,8 @@ namespace DZ1
 
             for (int i = 0; i < _asteroids.Length; i++)
             {
-                int _x = Random.Next(0, Width); // случайное место
-                int _y = Random.Next(0, Height);
-                int _layer = 3; 
-
-                _asteroids[i] = new Asteroid(new Point(_x, _y), new Point(1, 0), new Size(2, 2), _layer);
-
+                
+                _asteroids[i] = OneAsteroid();
                 //отрисовка
             }
 
@@ -64,6 +62,17 @@ namespace DZ1
                 _ship = new Ship(new Point(_x, _y), new Point(10, 10), new Size(20, 20), _layer); 
             }
 
+            
+
+        }
+
+        static Asteroid OneAsteroid()
+        {
+            Random Random = new Random();
+            int _x = Random.Next(0, Width); // случайное место
+            int _y = Random.Next(0, Height);
+            int _layer = 3;
+            return new Asteroid(new Point(_x, _y), new Point(1, 0), new Size(2, 2), _layer);
         }
 
         public static void Init(Form form)
@@ -94,7 +103,12 @@ namespace DZ1
                 obj.Draw();
             foreach (BaseObject obj in _asteroids)
                 obj.Draw();
-            _ship.Draw();
+            _ship?.Draw();
+            _bulet?.Draw();
+
+            if (_ship != null)
+                Buffer.Graphics.DrawString("Energy:" + _ship.Energy, SystemFonts.DefaultFont, Brushes.White, 0, 0);
+
             Buffer.Render();
         }
 
@@ -102,9 +116,16 @@ namespace DZ1
         {
             foreach (BaseObject obj in _stars)
                 obj.Update();
-            foreach (BaseObject obj in _asteroids)
-                obj.Update();
+            for (int i = 0; i<_asteroids.Length; i++)
+            {
+                _asteroids[i].Update();
+                if (_bulet != null && _asteroids[i].Collision(_bulet)) 
+                {
+                    _asteroids[i] = OneAsteroid();  
+                }
+            }
             _ship.Update();
+            _bulet?.Update();
         }
 
 
@@ -118,9 +139,12 @@ namespace DZ1
         {
             switch (E.KeyCode)
             {
-                /*case Keys.ControlKey:
-                    __Bullet = new Bullet(__Ship.Position.Y);
-                    break;*/
+                case Keys.ControlKey:
+                    
+                    _bulet = new Bulet(_ship._Pos.Y+_ship._Size.Height/2);
+                    
+
+                    break;
 
                 case Keys.Up:
                     _ship.MoveUp();

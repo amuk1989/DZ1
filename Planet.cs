@@ -15,7 +15,7 @@ namespace DZ1
         }
         public override void Draw()
         {
-            Game.Buffer.Graphics.DrawEllipse(Pens.Red, Pos.X, Pos.Y, Size.Width, Size.Height);
+            Game.Buffer.Graphics.DrawRectangle(Pens.Red, Pos.X, Pos.Y, Size.Width, Size.Height);
             Game.Buffer.Graphics.FillEllipse(Brushes.Red, Pos.X, Pos.Y, Size.Width, Size.Height);
         }
     }
