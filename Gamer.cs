@@ -23,8 +23,6 @@ namespace DZ1
             get => _score;
             set => _score = value;
         }
-
         
-
     }
 }

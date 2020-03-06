@@ -9,11 +9,11 @@ namespace DZ1
 {
     class Asteroid: BaseObject
     {
+        //private Image fileOfAsteroid;
         Image fileOfAsteroid = Image.FromFile("asteroid.png");
-
         public Asteroid(Point pos, Point dir, Size size, int Layer) : base(pos, dir, size, Layer)
         {
-
+            //fileOfAsteroid = _fileOfAsteroid;
         }
 
         public override void Draw()

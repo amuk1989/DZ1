@@ -9,7 +9,7 @@ namespace DZ1
 {
     class Medecine: BaseObject
     {
-        Image fileOfMedecine = Image.FromFile("medecine.png");
+        private static readonly Image fileOfMedecine = Image.FromFile("medecine.png");
 
         public Medecine(Point pos, Point dir, Size size) : base(pos, dir, size, 3)
         {

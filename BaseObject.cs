@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace DZ1
 {
     abstract class BaseObject: ICollision
@@ -12,6 +13,7 @@ namespace DZ1
         protected Point Pos;
         protected Point Dir;
         protected Size Size;
+        //protected Image image;
 
         public Point _Pos => Pos;
         public Size _Size => Size;
@@ -25,6 +27,7 @@ namespace DZ1
             Dir.X = (layer + 1) * 10;// скорость зависит от удаленности объекта
             Size.Width = Size.Width * (layer + 1) * 3;// размер зависит от удаленности объекта
             Size.Height = Size.Height * (layer + 1) * 3;// размер зависит от удаленности объекта
+            
             
         }
         public abstract void Draw();

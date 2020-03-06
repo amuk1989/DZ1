@@ -14,6 +14,7 @@ namespace DZ1
 
         private static BufferedGraphicsContext _context;
         public static BufferedGraphics Buffer;
+        
 
         // Свойства
         // Ширина и высота игрового поля
@@ -23,7 +24,7 @@ namespace DZ1
         public static BaseObject[] _stars;//Массив фоновых объектов
         public static BaseObject[] _asteroids;//Массив фоновых объектов
         public static Ship _ship;//корабль
-        public static Bulet _bulet;//пуля
+        private static List<Bulet> _bullets = new List<Bulet>();//пуля
         public static Medecine _medecine;//Аптечка
         public static Gamer gamer;
 
@@ -56,6 +57,7 @@ namespace DZ1
             int asteroidCount = 10;
             _asteroids = new Asteroid[asteroidCount];
 
+            //fileOfAsteroid = Image.FromFile("asteroid.png");
             for (int i = 0; i < _asteroids.Length; i++)
             {
                 
@@ -132,7 +134,7 @@ namespace DZ1
                 a?.Draw();
             }
 
-            _bulet?.Draw();
+            foreach (Bulet b in _bullets) b?.Draw();
             _ship?.Draw();
 
             if (_ship != null)
@@ -154,21 +156,22 @@ namespace DZ1
 
             foreach (BaseObject obj in _stars)
                 obj.Update();
-
+            foreach (Bulet b in _bullets) b?.Update();
             for (var i = 0; i < _asteroids.Length; i++)
             {
                 if (_asteroids[i] == null) continue;
                 _asteroids[i].Update();
 
-                if (_bulet != null && _bulet.Collision(_asteroids[i]))//попал по астероиду
+                for (int j = 0; j<_bullets.Count; j++) 
+                if (_bullets[j] != null && _asteroids[i] != null && _bullets[j].Collision(_asteroids[i]))//попал по астероиду
                 {
                     _asteroids[i] = null;
-                    _bulet = null;
-                    gamer.Score = gamer.Score+1;
+                    _bullets[j] = null;
+                    gamer.Score ++;
                     continue;
                 }
-                if (!_ship.Collision(_asteroids[i])) continue;
-                
+                if (_asteroids[i] == null || !_ship.Collision(_asteroids[i])) continue;
+
                 _ship?.EnergyLow(random.Next(1, 10));
                 if (_ship.Energy <= 0) _ship?.Die();
 
@@ -180,9 +183,11 @@ namespace DZ1
             }
 
             _ship?.Update();
-            _bulet?.Update();
+            foreach (Bulet b in _bullets) b?.Update();
             _medecine?.Update();
             if (_medecine != null && _medecine._Pos.X < 0) _medecine = null;
+            if (_medecine == null)
+                _medecine = CreateMedecine();
         }
 
 
@@ -190,8 +195,7 @@ namespace DZ1
         {
             Draw();
             Update();
-            if (_medecine == null) 
-                _medecine = CreateMedecine();
+            
         }
 
         private static void OnFormKeyDown(object Sender, KeyEventArgs E)
@@ -199,10 +203,8 @@ namespace DZ1
             switch (E.KeyCode)
             {
                 case Keys.ControlKey:
-                    
-                    _bulet = new Bulet(_ship._Pos.Y+_ship._Size.Height/2);
-                    
 
+                    _bullets.Add(new Bulet(_ship._Pos.Y + _ship._Size.Height / 2));
                     break;
 
                 case Keys.Up:
