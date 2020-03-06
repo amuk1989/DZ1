@@ -22,7 +22,7 @@ namespace DZ1
         public static int Height { get; set; }
 
         public static BaseObject[] _stars;//Массив фоновых объектов
-        public static BaseObject[] _asteroids;//Массив фоновых объектов
+        private static List<Asteroid> _asteroids = new List<Asteroid>();//Массив фоновых объектов
         public static Ship _ship;//корабль
         private static List<Bulet> _bullets = new List<Bulet>();//пуля
         public static Medecine _medecine;//Аптечка
@@ -55,15 +55,9 @@ namespace DZ1
             }
 
             int asteroidCount = 10;
-            _asteroids = new Asteroid[asteroidCount];
+            //_asteroids = new Asteroid[asteroidCount];
 
-            //fileOfAsteroid = Image.FromFile("asteroid.png");
-            for (int i = 0; i < _asteroids.Length; i++)
-            {
-                
-                _asteroids[i] = OneAsteroid();
-                //отрисовка
-            }
+            CreateAstroid(asteroidCount);
 
             {
                 int _x = 10; 
@@ -89,6 +83,13 @@ namespace DZ1
                 return new Medecine(new Point(_x, _y), new Point(1, 0), new Size(5, 5));
             }
             else return null;
+        }
+
+        static void CreateAstroid(int count)
+        {
+            _asteroids.Clear();
+            for (int i = 0; i < count; i++) _asteroids.Add(OneAsteroid());
+
         }
 
         static Asteroid OneAsteroid()
@@ -157,7 +158,8 @@ namespace DZ1
             foreach (BaseObject obj in _stars)
                 obj.Update();
             foreach (Bulet b in _bullets) b?.Update();
-            for (var i = 0; i < _asteroids.Length; i++)
+            
+            for (int i = 0; i < _asteroids.Count; i++)
             {
                 if (_asteroids[i] == null) continue;
                 _asteroids[i].Update();
@@ -166,15 +168,25 @@ namespace DZ1
                 if (_bullets[j] != null && _asteroids[i] != null && _bullets[j].Collision(_asteroids[i]))//попал по астероиду
                 {
                     _asteroids[i] = null;
+
                     _bullets[j] = null;
                     gamer.Score ++;
                     continue;
                 }
+
+                
+
                 if (_asteroids[i] == null || !_ship.Collision(_asteroids[i])) continue;
 
                 _ship?.EnergyLow(random.Next(1, 10));
                 if (_ship.Energy <= 0) _ship?.Die();
 
+            }
+
+            for (int i = 0; i < _asteroids.Count; i++)
+            {
+                if (_asteroids[i] != null) break;
+                CreateAstroid(_asteroids.Count + 1);
             }
 
             if (_medecine != null && _ship.Collision(_medecine))
