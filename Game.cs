@@ -186,7 +186,7 @@ namespace DZ1
             for (int i = 0; i < _asteroids.Count; i++)
             {
                 if (_asteroids[i] != null) break;
-                CreateAstroid(_asteroids.Count + 1);
+                if (i == _asteroids.Count-1) CreateAstroid(_asteroids.Count + 1);
             }
 
             if (_medecine != null && _ship.Collision(_medecine))

@@ -32,14 +32,14 @@ namespace DZ1
         public void MoveUp()
         {
 
-            if (Pos.Y > 0) Pos.Y = Pos.Y - Dir.Y;
+            if (Pos.Y + Size.Height / 2 > 0) Pos.Y = Pos.Y - Dir.Y;
 
         }
 
         public void MoveDown()
         {
 
-            if (Pos.Y+Size.Height < Game.Height) 
+            if (Pos.Y+Size.Height/2 < Game.Height) 
                 Pos.Y = Pos.Y + Dir.Y;
 
         }
