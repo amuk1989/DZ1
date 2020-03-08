@@ -10,7 +10,7 @@ namespace DZ1
     class Asteroid: BaseObject
     {
         //private Image fileOfAsteroid;
-        Image fileOfAsteroid = Image.FromFile("asteroid.png");
+        private readonly Image fileOfAsteroid = Properties.Resources.asteroid;
         public Asteroid(Point pos, Point dir, Size size, int Layer) : base(pos, dir, size, Layer)
         {
             //fileOfAsteroid = _fileOfAsteroid;

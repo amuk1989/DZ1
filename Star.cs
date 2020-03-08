@@ -9,20 +9,21 @@ namespace DZ1
 {
     class Star: BaseObject
     {
-        Image fileOfStar = Image.FromFile("star1.png");
+        Image fileOfStar = Properties.Resources.star1;
         Random Random = new Random();
-        string RandomColorStar(int color)
+        Image RandomColorStar(int color)
         {
-            if (color == 0) return "star1.png";
-            else if (color == 1) return "star2.png";
-            else return "star3.png";
+            
+            if (color == 0) return Properties.Resources.star1;
+            else if (color == 1) return Properties.Resources.star2;
+            else return Properties.Resources.star3;
 
         }
 
         public Star(Point pos, Point dir, Size size, int Layer) : base(pos, dir, size, Layer)
         {
             int _color = Random.Next(0, 3);
-            fileOfStar = Image.FromFile(RandomColorStar(_color));// инициализация картинки
+            fileOfStar = (RandomColorStar(_color));// инициализация картинки
         }
 
         public override void Draw()
