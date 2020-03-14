@@ -20,9 +20,9 @@
 
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Имя" Width="Auto" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Фамилия" Width="Auto" DisplayMemberBinding="{Binding SurName}" />
-                    <GridViewColumn Header="Отдел" Width="Auto" DisplayMemberBinding="{Binding Department.Name}" />
+                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Фамилия" DisplayMemberBinding="{Binding SurName}" />
+                    <GridViewColumn Header="Отдел" DisplayMemberBinding="{Binding Department.Name}" />
                 </GridView>
             </ListView.View>
 
