@@ -12,9 +12,10 @@ namespace HelloWPF
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string _Name;
+        private string _SurName;
+        private Department _Department;
 
-        public int Id { get; set; }
-
+       
         public string Name
         {
             get => _Name;
@@ -25,13 +26,27 @@ namespace HelloWPF
             }
         }
 
-        public string SurName { get; set; }
+        public string SurName 
+        { 
+            get => _SurName; 
+            set 
+            {
+                _SurName = value; 
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SurName))); 
+            } 
+        }
 
-        public string Department { get; set; }
+        public Department Department
+        {
+            get => _Department;
+            set
+            {
+                _Department = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Department)));
+            } 
+        }
 
-        public DateTime DayOfBirth { get; set; }
-
-        public int Age => (int)Math.Floor((DateTime.Now - DayOfBirth).TotalDays / 365);
+       
 
         public override string ToString() => $"Сотрудник {Name} {SurName}. Отдел {Department}";
     }

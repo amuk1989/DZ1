@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace HelloWPF
 {
@@ -20,8 +21,9 @@ namespace HelloWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public List<Department> departments = new List<Department>();//это список отделов
-        List<Employee> _employees = new List<Employee>();//это список сотрудников
+        public ObservableCollection<Department> departments = new ObservableCollection<Department>();//это список отделов
+        //ObservableCollection<Employee> _employees = new ObservableCollection<Employee>();//это список сотрудников
+        static ObservableCollection<Employee> _Employees = new ObservableCollection<Employee>();
         public MainWindow()
         {
             InitializeComponent();
@@ -38,33 +40,22 @@ namespace HelloWPF
             Department _department = new Department();
 
             _department.Name = TextNameDepartment.Text;
-            if (!departments.Exists(x => x.Name == (_department.Name)))// нельзя добавить обдинаковый отдел
-            {
+           
                 departments.Add(_department);
                 
-                ListDepartments.ItemsSource = departments.ToArray();
+                ListDepartments.ItemsSource = departments;
                 ListDepartments.SelectedIndex = departments.IndexOf(_department);
-            }
-            else
-            {
-                MessageBox.Show("Такой отдел существует!");
-            }
+            
             
         }
 
         private void ButtonEditDep_Click(object sender, RoutedEventArgs e)
         {
             
-            if (!departments.Exists(x => x.Name == (TextNameDepartment.Text)))// нельзя добавить обдинаковый отдел
-            {
                 departments[ListDepartments.SelectedIndex].Name = TextNameDepartment.Text;
-                ListDepartments.ItemsSource = departments.ToArray();
-                ListView.ItemsSource = _employees.ToArray();
-            }
-            else
-            {
-                MessageBox.Show("Такой отдел существует!");
-            }
+                ListDepartments.ItemsSource = departments;
+                ListView.ItemsSource = _Employees;
+         
         }
 
         
@@ -72,15 +63,22 @@ namespace HelloWPF
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Employee _employ = new Employee();
-            _employ.Name = TextName.Text;
-            _employ.SurName = TextLastName.Text;
-            _employ.Department = ListDepartments.Text;
+            try
+            {
+                Employee _employ = new Employee();
+                _employ.Name = TextName.Text;
+                _employ.SurName = TextLastName.Text;
+                _employ.Department = departments[ListDepartments.SelectedIndex];
 
-            //_employees.Clear();
-            _employees.Add(_employ);
-            //TestData.Employees = _employees;
-            ListView.ItemsSource = _employees.ToArray();
+                //_employees.Clear();
+                //_employees.Add(_employ);
+                _Employees.Add(_employ);
+                ListView.ItemsSource = _Employees;
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка");
+            }
 
         }
 
@@ -89,22 +87,20 @@ namespace HelloWPF
             try
             {
 
-                var emp = _employees[ListView.SelectedIndex];
-
-                emp.Name = TextName.Text;
-                emp.SurName = TextLastName.Text;
-                emp.Department = ListDepartments.Text;
-                
+                _Employees[ListView.SelectedIndex].Name = TextName.Text;
+                _Employees[ListView.SelectedIndex].SurName = TextLastName.Text;
+                _Employees[ListView.SelectedIndex].Department = departments[ListDepartments.SelectedIndex];
+                //_Employees.SetItem(ListView.SelectedIndex, emp);
 
             }
             catch
             {
-                MessageBox.Show("Ошибка");
+                MessageBox.Show("Ошибка! Выберите сотрудника в списке");
             }
             finally
             {
                 //ListView.Items.Clear();
-                ListView.ItemsSource = _employees.ToArray();
+                ListView.ItemsSource = _Employees;
             }
 
         }
