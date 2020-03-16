@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-        xmlns:data="clr-namespace:HelloWPF"        
+        xmlns:data="clr-namespace:HelloWPF.Properties"     
         xmlns:local="clr-namespace:HelloWPF"
         
         Title="MainWindow" Height="242" Width="573">
@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
         <Button Content="Запись" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,65,135,0" Height="20" Click="Button_Click_1"/>
         <Button Content="Выход" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Margin="0,389,10,0" Height="20" Click="Button_Click" IsEnabled="False"/>
-        <ListView Name="ListView" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" >
+        <ListView Name="ListView" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" ItemsSource="{Binding Path=_Employees}">
 
             <ListView.View>
                 <GridView>
@@ -31,7 +31,8 @@
 
         <TextBox x:Name="TextLastName" HorizontalAlignment="Right" Height="23" TextWrapping="Wrap" Text="Фамилия" VerticalAlignment="Top" Width="120" Margin="0,10,10,0"/>
         <TextBox x:Name="TextName" HorizontalAlignment="Right" Height="23" TextWrapping="Wrap" Text="Имя" VerticalAlignment="Top" Width="120" Margin="0,10,135,0"/>
-        <ComboBox x:Name="ListDepartments" HorizontalAlignment="Right" VerticalAlignment="Top" Width="245" Margin="0,38,10,0" DisplayMemberPath="Name">
+        <ComboBox x:Name="ListDepartments" HorizontalAlignment="Right" VerticalAlignment="Top" Width="245" Margin="0,38,10,0" DisplayMemberPath="Name"
+                  >
         </ComboBox>
         <TextBox x:Name="TextNameDepartment" HorizontalAlignment="Right" Height="23" TextWrapping="Wrap" Text="Название департамента" VerticalAlignment="Top" Width="245" Margin="0,90,10,0"/>
         <Button x:Name="ButtonAddDep" Content="Добавить &#xa; департамент" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" Margin="0,118,135,0" Height="38" Click="ButtonAddDep_Click"/>

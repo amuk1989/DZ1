@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Collections.ObjectModel;
+
 
 namespace HelloWPF
 {
@@ -21,12 +10,14 @@ namespace HelloWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Department> departments = new ObservableCollection<Department>();//это список отделов
+        public static ObservableCollection<Department> departments = new ObservableCollection<Department>();//это список отделов
         //ObservableCollection<Employee> _employees = new ObservableCollection<Employee>();//это список сотрудников
-        static ObservableCollection<Employee> _Employees = new ObservableCollection<Employee>();
+        public static ObservableCollection<Employee> _Employees = new ObservableCollection<Employee>();
+
         public MainWindow()
         {
             InitializeComponent();
+            //ObservableCollection<Department> departments = new ObservableCollection<Department>();//это список отделов
 
         }
 
@@ -40,21 +31,25 @@ namespace HelloWPF
             Department _department = new Department();
 
             _department.Name = TextNameDepartment.Text;
-           
-                departments.Add(_department);
-                
-                ListDepartments.ItemsSource = departments;
-                ListDepartments.SelectedIndex = departments.IndexOf(_department);
-            
-            
+
+            departments.Add(_department);
+
+            AddData.SqlAddDepartment(TextNameDepartment.Text);
+
+            ListDepartments.ItemsSource = departments;
+
+            ListDepartments.SelectedItem = _department;
         }
 
         private void ButtonEditDep_Click(object sender, RoutedEventArgs e)
         {
+
+            //ListDepartments.SelectedItem.Name = TextNameDepartment.Text;
             
-                departments[ListDepartments.SelectedIndex].Name = TextNameDepartment.Text;
-                ListDepartments.ItemsSource = departments;
-                ListView.ItemsSource = _Employees;
+            departments[ListDepartments.SelectedIndex].Name = ListDepartments.Text;
+            
+            ListDepartments.ItemsSource = departments;
+            ListView.ItemsSource = _Employees;
          
         }
 
@@ -74,11 +69,13 @@ namespace HelloWPF
                 //_employees.Add(_employ);
                 _Employees.Add(_employ);
                 ListView.ItemsSource = _Employees;
+                AddData.SqlAddEmployee(TextName.Text, TextLastName.Text);
             }
             catch
             {
                 MessageBox.Show("Ошибка");
             }
+            
 
         }
 

@@ -10,6 +10,7 @@ namespace HelloWPF
     public class Department : INotifyPropertyChanged
     {
         private string _Name;
+        int _id;
         public event PropertyChangedEventHandler PropertyChanged;
         //private List<string> _ListOfEmloy;
 
@@ -27,8 +28,22 @@ namespace HelloWPF
             }
         }
 
+        public int Id
+        {
+            get
+            {
+                return _id;
+
+            }
+            set
+            {
+                _id = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Id)));
+            }
+        }
 
 
-        
+
+
     }
 }
